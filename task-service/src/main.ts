@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './modules/app.module';
-import { initTrace } from './tracer.config';
+import { initTrace } from './tracer/tracer.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

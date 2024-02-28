@@ -15,13 +15,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  async getHello(
-    @GetTracer({
-      name: 'user-service',
-    })
-    traceData: ICreateTracerRes,
-  ) {
-    const { tracer, span, ctx } = traceData;
+  async getHello() {
     await this.appService.getHello();
   }
 

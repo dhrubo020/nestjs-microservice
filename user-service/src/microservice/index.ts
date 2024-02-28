@@ -18,10 +18,8 @@ export class MicroServiceClient {
   constructor(@Inject('MICROSERVICE_CLIENT') private client: ClientProxy) {}
 
   async send<T, U>(message: string, data: T): Promise<U> {
-    console.log('Sending message');
+    console.log('Sending message...');
     try {
-      console.log({ message, data });
-
       return await firstValueFrom(
         this.client.send<U>({ cmd: message }, data).pipe(timeout(2000)),
       );

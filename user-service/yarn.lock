@@ -973,6 +973,13 @@
   dependencies:
     "@opentelemetry/semantic-conventions" "1.21.0"
 
+"@opentelemetry/core@^1.21.0":
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/core/-/core-1.21.0.tgz#8c16faf16edf861b073c03c9d45977b3f4003ee1"
+  integrity sha512-KP+OIweb3wYoP7qTYL/j5IpOlu52uxBv5M4+QhSmmUfLyTgu1OIS71msK3chFo1D6Y61BIH3wMiMYRCxJCQctA==
+  dependencies:
+    "@opentelemetry/semantic-conventions" "1.21.0"
+
 "@opentelemetry/exporter-jaeger@^1.21.0":
   version "1.21.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/exporter-jaeger/-/exporter-jaeger-1.21.0.tgz#01870a5fcc68978d790bb053f567dcec80ee2962"

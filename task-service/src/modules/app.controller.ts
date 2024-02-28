@@ -1,38 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
-import {
-  Ctx,
-  EventPattern,
-  MessagePattern,
-  Payload,
-  RedisContext,
-} from '@nestjs/microservices';
-import { randomInt } from 'crypto';
-import {
-  trace,
-  Span,
-  propagation,
-  context,
-  createContextKey,
-  SpanContext,
-} from '@opentelemetry/api';
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { newSpan } from 'src/tracer/tracer.utils';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @MessagePattern({ cmd: 'test_message' })
-  async getMessage(payload: { data: any; spanCtx: SpanContext }) {
-    const { data } = payload;
-    const parentSpanCtx = payload.spanCtx;
-    console.log('parentSpanCtx', parentSpanCtx);
-    const parentSpan = trace.setSpanContext(context.active(), parentSpanCtx);
-    const span2 = trace
-      .getTracer('user-serive')
-      .startSpan('childspan', {}, parentSpan);
-    console.log('MessagePattern', { data });
-    await this.appService.getHello();
-    span2.end();
+  async getMessage(payload: any) {
+    const spanContext = payload?.spanContext;
+    const childSpan = newSpan(this.getMessage.name, spanContext);
+    console.log('MessagePattern', payload.data);
+    // await this.appService.getHello();
+    childSpan.end();
     return 10;
   }
 }
