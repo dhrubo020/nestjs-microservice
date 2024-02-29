@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './modules/app.module';
 import { initTrace } from './tracer/tracer.config';
+import { ResponseTimeMiddleware } from './utils/proms';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,7 @@ async function bootstrap() {
   });
   await app.startAllMicroservices();
   initTrace('user-service');
+  app.use(ResponseTimeMiddleware);
   const port = 3001;
   await app.listen(port);
   console.log(`user service: http://localhost:${port}`);

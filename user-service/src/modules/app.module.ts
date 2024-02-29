@@ -1,25 +1,17 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MicroServiceClientModule } from 'src/microservice';
+import { LoggerModule } from 'src/utils/logger';
+import { ResponseTimeMiddleware } from 'src/utils/proms';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
-    // ClientsModule.register([
-    //   {
-    //     name: 'CLIENT_PROXY',
-    //     transport: Transport.RMQ,
-    //     options: {
-    //       urls: ['amqp://localhost:5672'],
-    //       queue: 'task_queue',
-    //       queueOptions: {
-    //         durable: false,
-    //       },
-    //     },
-    //   },
-    // ]),
     MicroServiceClientModule.register(),
+    PrometheusModule.register(),
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

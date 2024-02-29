@@ -16,7 +16,12 @@ export class AppController {
 
   @Get()
   async getHello() {
-    await this.appService.getHello();
+    return await this.appService.getHello();
+  }
+
+  @Get('/slow')
+  async getSlow() {
+    return await this.appService.getSlow();
   }
 
   @MessagePattern({ cmd: 'task_message' })
