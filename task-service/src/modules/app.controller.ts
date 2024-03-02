@@ -37,8 +37,6 @@ export class AppController {
     }
     // caching
     const cacheSpan = newSpan(this.getMessage.name, spanContext);
-    console.log({ cacheSpan });
-
     const cacheData = await this.redis.get(userId);
     if (cacheData) {
       return JSON.parse(cacheData);
@@ -50,7 +48,7 @@ export class AppController {
 
     // get post from mongodb
     const dbCallSpan = newSpan('dbCallSpan', spanContext);
-    console.log({ dbCallSpan });
+    console.log('dbCallSpan', dbCallSpan.spanContext);
 
     const posts = await this.appService.getPost();
     dbCallSpan.end();
