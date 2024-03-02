@@ -6,6 +6,7 @@ import { initTrace } from './tracer/tracer.config';
 import { ResponseTimeMiddleware } from './utils/proms';
 
 async function bootstrap() {
+  console.log({ amqpUrl })
   const app = await NestFactory.create(AppModule);
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,

@@ -22,6 +22,7 @@ export class AppController {
     // };
     const spanContext = payload?.spanContext;
     const childSpan = newSpan(this.getMessage.name, spanContext);
+    console.log({ childSpan })
     console.log('MessagePattern', payload.data);
     // await this.appService.getHello();
     childSpan.end();
