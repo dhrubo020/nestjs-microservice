@@ -6,9 +6,9 @@ import { MessagePattern } from '@nestjs/microservices';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
+  @Get('/posts')
   async getHello() {
-    return await this.appService.getHello();
+    return await this.appService.getPosts();
   }
 
   @Get('/slow')
