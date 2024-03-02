@@ -1,14 +1,14 @@
 version: "3"
 
 services:
-    mysql:
-        image: mysql:latest
-        container_name: mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: 1234
-            MYSQL_DATABASE: user-posts
-            MYSQL_USERNAME: root
-            MYSQL_PASSWORD: 1234
+    # mysql:
+    #     image: mysql:latest
+    #     container_name: mysql
+    #     environment:
+    #         MYSQL_ROOT_PASSWORD: 1234
+    #         MYSQL_DATABASE: user-posts
+    #         MYSQL_USERNAME: root
+    #         MYSQL_PASSWORD: 1234
 
     rabbitmq:
         image: rabbitmq:latest
@@ -46,9 +46,9 @@ services:
         environment:
             - RABBITMQ_MQ=amqp://rabbitmq
         depends_on:
-            - mysql
+            # - mysql
             - rabbitmq
-            - redis
+            # - redis
 
     tasks_service:
         image: hackathon_tasks_image
@@ -64,11 +64,11 @@ services:
             - MYSQL_HOST=mysql
             - MYSQL_PORT=3306
             - RABBITMQ_MQ=amqp://rabbitmq
-            - REDIS_URL=redis://redis
+            - REDIS_URL=redis://54.145.6.11:6379
             # - MYSQL_URL=mysql
             - MONGODB=mongodb+srv://dnsdhrubo:jVGflASJlCR5Xy2B@cluster0.xhxuxg5.mongodb.net/hackathon
         depends_on:
-            - mysql
+            # - mysql
             - rabbitmq
             - redis      
 
