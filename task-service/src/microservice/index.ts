@@ -11,6 +11,7 @@ import {
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
+import { amqpUrl } from 'config';
 import { firstValueFrom, timeout } from 'rxjs';
 
 export class MicroServiceClient {
@@ -47,7 +48,7 @@ export class MicroServiceClientModule {
             ClientProxyFactory.create({
               transport: Transport.RMQ,
               options: {
-                urls: ['amqp://localhost:5672'],
+                urls: [amqpUrl],
                 queue: 'user_queue',
                 queueOptions: {
                   durable: false,

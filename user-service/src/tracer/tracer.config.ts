@@ -1,9 +1,6 @@
 /*instrumentation.ts*/
 import { NodeSDK } from '@opentelemetry/sdk-node';
-import {
-  BatchSpanProcessor,
-  SimpleSpanProcessor,
-} from '@opentelemetry/sdk-trace-node';
+import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import {
   PeriodicExportingMetricReader,
@@ -14,11 +11,12 @@ import { Resource } from '@opentelemetry/resources';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
+import { jaegerEndpoint } from 'config';
 
 export function initTrace(serviceName: string) {
   try {
     const exporter = new JaegerExporter({
-      endpoint: 'http://localhost:14268/api/traces',
+      endpoint: jaegerEndpoint,
     });
 
     const sdk = new NodeSDK({

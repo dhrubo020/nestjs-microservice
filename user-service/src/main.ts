@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { amqpUrl } from 'config';
 import { AppModule } from './modules/app.module';
 import { initTrace } from './tracer/tracer.config';
 import { ResponseTimeMiddleware } from './utils/proms';
@@ -9,7 +10,7 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://localhost:5672'],
+      urls: [amqpUrl],
       queue: 'user_queue',
       queueOptions: {
         durable: false,

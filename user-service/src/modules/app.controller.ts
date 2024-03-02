@@ -1,13 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import {
-  trace,
-  Span,
-  propagation,
-  context,
-  createContextKey,
-} from '@opentelemetry/api';
-import { GetTracer, ICreateTracerRes } from 'src/decorators/tracer.decorator';
 import { MessagePattern } from '@nestjs/microservices';
 
 @Controller()

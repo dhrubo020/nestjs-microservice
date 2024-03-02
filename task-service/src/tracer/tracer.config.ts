@@ -13,11 +13,12 @@ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 import { Resource } from '@opentelemetry/resources';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
+import { jaegerEndpoint } from 'config';
 
 export function initTrace(serviceName: string) {
   try {
     const exporter = new JaegerExporter({
-      endpoint: 'http://localhost:14268/api/traces',
+      endpoint: jaegerEndpoint,
     });
 
     const sdk = new NodeSDK({

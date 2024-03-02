@@ -17,7 +17,11 @@ export class AppService {
       data: 'message from user service',
       spanContext: traceData.spanContext,
     };
+    //
+    // trace + logger
+    this.winstonLogger.log(JSON.stringify(payload));
     const doc = await this.clientProxy.send('test_message', payload);
+    //
     console.log({ doc });
     this.winstonLogger.log('Get Hellow');
     this.winstonLogger.error('Get Error', 'pppppp');
