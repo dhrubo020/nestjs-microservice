@@ -1,38 +1,38 @@
-version: '3'
+version: "3"
 
 services:
     mysql:
         image: mysql:latest
         container_name: mysql
         environment:
-            MYSQL_ROOT_PASSWORD: 
-            MYSQL_DATABASE: 
-            MYSQL_USER: 
-            MYSQL_PASSWORD: 
+            MYSQL_ROOT_PASSWORD: 1234
+            MYSQL_DATABASE: user-posts
+            MYSQL_USERNAME: root
+            MYSQL_PASSWORD: 1234
 
     rabbitmq:
         image: rabbitmq:latest
         container_name: rabbitmq
         ports:
-        - "5672:5672"
-        - "15672:15672"
+            - "5672:5672"
+            - "15672:15672"
     redis:
         image: redis:latest
         ports:
-        - "6379:6379"
+            - "6379:6379"
         networks:
-        - my-network
+            - my-network
     jaeger:
         image: jaegertracing/all-in-one:latest
         container_name: jaeger
         ports:
-        - "6831:6831/udp"    # jaeger-agent thrift compact port
-        - "6832:6832/udp"    # jaeger-agent thrift binary port
-        - "5778:5778"        # jaeger-agent admin HTTP port
-        - "16686:16686"      # jaeger-ui port
-        - "14268:14268"      # jaeger-collector port
-        - "14250:14250"      # jaeger-collector thrift HTTP port
-        - "9411:9411"        # jaeger-collector thrift compact port
+            - "6831:6831/udp" # jaeger-agent thrift compact port
+            - "6832:6832/udp" # jaeger-agent thrift binary port
+            - "5778:5778" # jaeger-agent admin HTTP port
+            - "16686:16686" # jaeger-ui port
+            - "14268:14268" # jaeger-collector port
+            - "14250:14250" # jaeger-collector thrift HTTP port
+            - "9411:9411" # jaeger-collector thrift compact port
 
     user_service:
         image: hackathon_users_image
@@ -45,8 +45,8 @@ services:
             - "3001:3001"
         environment:
             - RABBITMQ_MQ=amqp://rabbitmq
-            - REDIS_URL=
-            - MYSQL_URL=
+            - REDIS_URL=redis://redis
+            # - MYSQL_URL=
         depends_on:
             - mysql
             - rabbitmq
@@ -63,13 +63,14 @@ services:
             - "4000:4000"
         environment:
             - RABBITMQ_MQ=amqp://rabbitmq
-            - REDIS_URL=
-            - MYSQL_URL=
+            - REDIS_URL=redis://redis
+            # - MYSQL_URL=mysql
+            - MONGODB=mongodb+srv://dnsdhrubo:jVGflASJlCR5Xy2B@cluster0.xhxuxg5.mongodb.net/hackathon
         depends_on:
             - mysql
             - rabbitmq
             - redis      
 
 networks:
-  my-network:
-    driver: bridge
+    my-network:
+        driver: bridge
