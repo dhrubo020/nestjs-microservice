@@ -1,17 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostAggEntity } from 'src/database/entities/agg.entity';
-import { PostModel } from 'src/database/entities/post.entity';
+import { AggModel, PostModel } from 'src/database/entities/post.entity';
 import { MicroServiceClient } from 'src/microservice';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class AppService {
-  constructor(
-    private clientProxy: MicroServiceClient,
-    @InjectRepository(PostAggEntity)
-    private ormRepository: Repository<PostAggEntity>,
-  ) {}
+  constructor(private clientProxy: MicroServiceClient) {}
 
   async getPost() {
     // get post list
@@ -30,8 +26,8 @@ export class AppService {
       userId,
       content: 'aggregated content',
     };
-    const aggData = this.ormRepository.create(aggPayload);
-    const saved = await this.ormRepository.save(aggData);
+    // const aggData = this.ormRepository.create(aggPayload);
+    const saved = await AggModel.create(aggPayload);
     console.log({ saved });
     return saved;
   }

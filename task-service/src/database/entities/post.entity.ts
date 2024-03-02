@@ -14,5 +14,27 @@ const PostSchema = new Schema(
     versionKey: false,
   },
 );
+
+const AggSchema = new Schema(
+  {
+    userId: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
+    content: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
+);
+
 const PostModel = model('posts', PostSchema);
-export { PostModel };
+const AggModel = model('agg', AggSchema);
+export { PostModel, AggModel };
