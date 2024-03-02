@@ -42,11 +42,15 @@ services:
             dockerfile: Dockerfile
         restart: always
         ports:
-        - "3001:3001"
+            - "3001:3001"
+        environment:
+            - RABBITMQ_MQ=amqp://rabbitmq
+            - REDIS_URL=
+            - MYSQL_URL=
         depends_on:
-        - mysql
-        - rabbitmq
-        - redis
+            - mysql
+            - rabbitmq
+            - redis
 
     tasks_service:
         image: hackathon_tasks_image
@@ -56,11 +60,15 @@ services:
             dockerfile: Dockerfile
         restart: always
         ports:
-        - "4000:4000"
+            - "4000:4000"
+        environment:
+            - RABBITMQ_MQ=amqp://rabbitmq
+            - REDIS_URL=
+            - MYSQL_URL=
         depends_on:
-        - mysql
-        - rabbitmq
-        - redis      
+            - mysql
+            - rabbitmq
+            - redis      
 
 networks:
   my-network:
