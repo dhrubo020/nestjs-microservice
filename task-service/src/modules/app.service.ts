@@ -13,33 +13,26 @@ export class AppService {
     private ormRepository: Repository<PostAggEntity>,
   ) {}
 
-  async getHello() {
-    const doc = await this.clientProxy.send('task_message', {
-      data: 'task msg',
-    });
-    console.log({ doc });
-    return 'Hello World!';
-  }
-
   async getPost() {
     // get post list
-    const posts = await PostModel.find({}).lean();
-    const userId = '1';
+    try {
+      const posts = await PostModel.find({}).lean();
+      return posts;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 
-    // send from cache
-    // send from db
+  async saveAggData(userId, posts) {
     // save to mysql for users
-
     const aggPayload = {
       userId,
       content: 'aggregated content',
     };
-
     const aggData = this.ormRepository.create(aggPayload);
-    const saveToMysql = await this.ormRepository.save(aggData);
-
-    console.log({ saveToMysql });
-
-    return posts;
+    const saved = await this.ormRepository.save(aggData);
+    console.log({ saved });
+    return saved;
   }
 }

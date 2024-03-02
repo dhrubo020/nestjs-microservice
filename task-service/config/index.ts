@@ -8,7 +8,7 @@ const {
   MYSQL_DATABASE,
 } = process.env;
 
-export const localIp = '172.18.105.191';
+export const localIp = 'localhost';
 export const amqpUrl = `amqp://${localIp}:5672` || '';
 export const redisUrl = `redis://${localIp}:6379`;
 export const lokiHostUrl = `http://${localIp}:3100` || '';

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern } from '@nestjs/microservices';
 
@@ -6,9 +6,14 @@ import { MessagePattern } from '@nestjs/microservices';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('/posts')
-  async getHello() {
-    return await this.appService.getPosts();
+  @Get()
+  async init() {
+    return 'User service is running';
+  }
+
+  @Get('/posts/:id')
+  async getHello(@Param('id') id: string) {
+    return await this.appService.getPosts(id);
   }
 
   @Get('/slow')
