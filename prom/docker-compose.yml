@@ -16,13 +16,23 @@ services:
             - "9090:9090"
         volumes:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        networks:
+            - monitoring_network
 
     grafana:
-        image: grafana/grafana
+        image: grafana/grafana-oss
         ports:
             - "3200:3000"
+        networks:
+            - monitoring_network
 
     loki:
         image: grafana/loki
         ports:
             - "3100:3100"
+        networks:
+            - monitoring_network
+
+networks:
+    monitoring_network:
+        driver: bridge

@@ -7,7 +7,7 @@ import { newSpan } from 'src/tracer/tracer.utils';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @MessagePattern({ cmd: 'test_message' })
+  @MessagePattern({ cmd: 'GET_FEEDS_MESSAGE' })
   async getMessage(payload: any) {
     const spanContext = payload?.spanContext;
     const childSpan = newSpan(this.getMessage.name, spanContext);
