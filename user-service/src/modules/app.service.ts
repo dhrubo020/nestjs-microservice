@@ -16,7 +16,9 @@ export class AppService {
     const traceData = newTracer(this.getPosts.name);
     const tracer = trace.getTracer(this.getSlow.name);
     const payload = {
-      data: 'message from user service',
+      data: {
+        userId: ''
+      },
       spanContext: traceData.spanContext,
     };
     //
