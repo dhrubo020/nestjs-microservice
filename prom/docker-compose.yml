@@ -38,15 +38,13 @@ services:
         image: hackathon_users_image
         container_name: users_service
         build:
-            context: ../task-service
+            context: ../user-service
             dockerfile: Dockerfile
         restart: always
         ports:
             - "3001:3001"
         environment:
             - RABBITMQ_MQ=amqp://rabbitmq
-            - REDIS_URL=redis://redis
-            # - MYSQL_URL=
         depends_on:
             - mysql
             - rabbitmq
@@ -62,6 +60,9 @@ services:
         ports:
             - "4000:4000"
         environment:
+            - MYSQL_USER=root
+            - MYSQL_HOST=mysql
+            - MYSQL_PORT=3306
             - RABBITMQ_MQ=amqp://rabbitmq
             - REDIS_URL=redis://redis
             # - MYSQL_URL=mysql
