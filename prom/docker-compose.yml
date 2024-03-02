@@ -5,10 +5,10 @@ services:
         image: mysql:latest
         container_name: mysql
         environment:
-            MYSQL_ROOT_PASSWORD:
-            MYSQL_DATABASE:
-            MYSQL_USER:
-            MYSQL_PASSWORD:
+            MYSQL_ROOT_PASSWORD: 1234
+            MYSQL_DATABASE: user-posts
+            MYSQL_USERNAME: root
+            MYSQL_PASSWORD: 1234
 
     rabbitmq:
         image: rabbitmq:latest
@@ -40,9 +40,13 @@ services:
         build:
             context: ../task-service
             dockerfile: Dockerfile
-        restart: always-oss
+        restart: always
         ports:
             - "3001:3001"
+        environment:
+            - RABBITMQ_MQ=amqp://rabbitmq
+            - REDIS_URL=redis://redis
+            # - MYSQL_URL=
         depends_on:
             - mysql
             - rabbitmq
@@ -57,10 +61,15 @@ services:
         restart: always
         ports:
             - "4000:4000"
+        environment:
+            - RABBITMQ_MQ=amqp://rabbitmq
+            - REDIS_URL=redis://redis
+            # - MYSQL_URL=mysql
+            - MONGODB=mongodb+srv://dnsdhrubo:jVGflASJlCR5Xy2B@cluster0.xhxuxg5.mongodb.net/hackathon
         depends_on:
             - mysql
             - rabbitmq
-            - redis
+            - redis      
 
 networks:
     my-network:
