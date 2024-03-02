@@ -3,11 +3,6 @@ import { model, Schema } from 'mongoose';
 
 const PostSchema = new Schema(
   {
-    id: {
-      type: String,
-      default: () => randomUUID(),
-      unique: true,
-    },
     content: {
       type: String,
       trim: true,
@@ -19,5 +14,5 @@ const PostSchema = new Schema(
     versionKey: false,
   },
 );
-const NoteModel = model('posts', PostSchema);
-export { NoteModel };
+const PostModel = model('posts', PostSchema);
+export { PostModel };

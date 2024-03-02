@@ -10,17 +10,16 @@ const {
 
 export const localIp = '172.18.105.191';
 export const amqpUrl = `amqp://${localIp}:5672` || '';
+export const redisUrl = `redis://${localIp}:6379`;
 export const lokiHostUrl = `http://${localIp}:3100` || '';
 export const jaegerEndpoint = `http://${localIp}:14268/api/traces`;
 
-export const mongoUrl =
-  'mongodb+srv://dnsdhrubo:jVGflASJlCR5Xy2B@cluster0.xhxuxg5.mongodb.net/bio-nippy-dev';
+// export const mongoUrl =
+//   'mongodb+srv://dnsdhrubo:jVGflASJlCR5Xy2B@cluster0.xhxuxg5.mongodb.net/hackathon';
 
 export const dbConfig = {
   mongodb: {
-    URI:
-      MONGODB_URI ||
-      'mongodb+srv://dnsdhrubo:jVGflASJlCR5Xy2B@cluster0.xhxuxg5.mongodb.net/bio-nippy-dev',
+    URI: 'mongodb+srv://dnsdhrubo:jVGflASJlCR5Xy2B@cluster0.xhxuxg5.mongodb.net/hackathon',
   },
   mysql: {
     host: MYSQL_HOST || 'localhost',
