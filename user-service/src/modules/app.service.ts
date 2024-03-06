@@ -12,6 +12,25 @@ export class AppService {
   ) {}
 
   async getHello() {
+    const traceData = newTracer('user-service');
+    const payload = {
+      data: 'message from user service',
+      spanContext: traceData.spanContext,
+    };
+    const doc = await this.clientProxy.send('error_message', payload);
+    // console.log({ doc });
+    // this.winstonLogger.log('Get Hellow');
+    // this.winstonLogger.error('Get Error', 'pppppp');
+
+    traceData.span.end();
+    if (!doc) {
+      return 'Error';
+    }
+
+    return 'Hello World!';
+  }
+
+  async taskService() {
     const traceData = newTracer(this.getHello.name);
     const payload = {
       data: 'message from user service',
@@ -21,9 +40,13 @@ export class AppService {
     console.log({ doc });
     this.winstonLogger.log('Get Hellow');
     this.winstonLogger.error('Get Error', 'pppppp');
-    traceData.span.end();
 
-    return 'Hello World!';
+    traceData.span.end();
+    if (!doc) {
+      return 'Error';
+    }
+
+    return doc;
   }
 
   async getSlow() {

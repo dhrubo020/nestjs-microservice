@@ -10,6 +10,9 @@ export class AppService {
       data: 'task msg',
     });
     console.log({ doc });
-    return 'Hello World!';
+    return {
+      userId: '11',
+      content: 'Test post',
+    };
   }
 }
