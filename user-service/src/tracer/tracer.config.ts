@@ -16,10 +16,14 @@ import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 
 export function initTrace(serviceName: string) {
+  let exporter: JaegerExporter;
   try {
-    const exporter = new JaegerExporter({
+    exporter = new JaegerExporter({
       endpoint: 'http://localhost:14268/api/traces',
     });
+    if (!exporter) {
+      console.log('Error');
+    }
 
     const sdk = new NodeSDK({
       resource: new Resource({
