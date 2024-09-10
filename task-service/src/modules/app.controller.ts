@@ -1,10 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
-import { AppService } from './app.service';
-import { newSpan } from 'src/tracer/tracer.utils';
 import { InjectRedis } from '@nestjs-modules/ioredis';
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import Redis from 'ioredis';
+import { newSpan } from 'src/tracer/tracer.utils';
 import { WinstonLogger } from 'src/utils/logger';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
@@ -21,100 +21,36 @@ export class AppController {
     console.log({ childSpan });
     console.log('MessagePattern', payload.data);
     // await this.appService.getHello();
+    // childSpan.end();
+    // const childSpan2 = newSpan(this.getMessage.name, spanContext);
+    // for (let i = 0; i < 1000; i++) {}
+    // childSpan2.end();
+
+    // const childSpan3 = newSpan(this.getMessage.name, spanContext);
+    // for (let i = 0; i < 1000; i++) {}
     childSpan.end();
-    return 10;
+    return {
+      userId: '11',
+      content: 'Test post',
+    };
   }
 
-  @MessagePattern({ cmd: 'GET_FEEDS_MESSAGE' })
-  async getPosts(payload: any) {
-    console.log('message payload', { payload });
-
-    const userId = payload?.data?.userId;
+  @MessagePattern({ cmd: 'error_message' })
+  async getError(payload: any) {
     const spanContext = payload?.spanContext;
+    const childSpan = newSpan(this.getError.name, spanContext);
 
-    if (!userId || !spanContext) {
-      this.winstonLogger.error('UserId or spanContext not found', '');
+    try {
+      throw Error('Custom Error');
+    } catch (error) {
+      childSpan.addEvent('error', {
+        'error.message': ' error.message',
+        'error.stack': 'error.stack',
+      });
     }
-    // caching
-    const cacheSpan = newSpan(this.getMessage.name, spanContext);
-    const cacheData = await this.redis.get(userId);
-    if (cacheData) {
-      return JSON.parse(cacheData);
-    } else {
-      console.log('cache missed');
-      this.winstonLogger.log('Cache missed');
-    }
-    cacheSpan.end();
 
-    // get post from mongodb
-    const dbCallSpan = newSpan('dbCallSpan', spanContext);
-    console.log('dbCallSpan', dbCallSpan.spanContext);
-
-    const posts = await this.appService.getPost();
-    dbCallSpan.end();
-
-    // save agg data to mysql
-    const saveAggSpan = newSpan('saveUserData', spanContext);
-    const saveUserData = await this.appService.saveAggData(userId, posts);
-    if (!saveUserData) {
-      this.winstonLogger.error('Can not save agg data', userId);
-    }
-    saveAggSpan.end();
-    await this.redis.set(userId, JSON.stringify(posts));
-
-    // return posts
-    console.log('sending posts');
-
-    return posts;
-  }
-
-  @Get('get-feed/:id')
-  async getFeed(payload: any) {
-    console.log('message payload', { payload });
-
-    const userId = payload?.data?.userId;
-    const spanContext = payload?.spanContext;
-
-    if (!userId || !spanContext) {
-      this.winstonLogger.error('UserId or spanContext not found', '');
-    }
-    // caching
-    const cacheSpan = newSpan(this.getMessage.name, spanContext);
-    const cacheData = await this.redis.get(userId);
-    if (cacheData) {
-      return JSON.parse(cacheData);
-    } else {
-      console.log('cache missed');
-      this.winstonLogger.log('Cache missed');
-    }
-    cacheSpan.end();
-
-    // get post from mongodb
-    const dbCallSpan = newSpan('dbCallSpan', spanContext);
-    const posts = await this.appService.getPost();
-    dbCallSpan.end();
-
-    // save agg data to mysql
-    const saveAggSpan = newSpan('saveUserData', spanContext);
-    const saveUserData = await this.appService.saveAggData(userId, posts);
-    if (!saveUserData) {
-      this.winstonLogger.error('Can not save agg data', userId);
-    }
-    saveAggSpan.end();
-    await this.redis.set(userId, JSON.stringify(posts));
-
-    // return posts
-    return posts;
-  }
-
-  @Get('agg')
-  async message() {
-    await this.redis.set('key', 'Redis data!');
-    const redisData = await this.redis.get('key');
-    console.log({ redisData });
-
-    console.log('from task service');
-    const post = await this.appService.getPost();
-    return post;
+    // await this.appService.getHello();
+    childSpan.end();
+    return null;
   }
 }

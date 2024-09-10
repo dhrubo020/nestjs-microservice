@@ -1,5 +1,4 @@
 import { Global, Injectable, LoggerService, Module } from '@nestjs/common';
-import { lokiHostUrl } from 'config';
 import * as winston from 'winston';
 const LokiTransport = require('winston-loki');
 
@@ -8,19 +7,25 @@ export class WinstonLogger implements LoggerService {
   private logger: winston.Logger;
 
   constructor() {
-    this.logger = winston.createLogger({
-      level: 'user-service-logger',
-      format: winston.format.json(),
-      defaultMeta: { service: 'user-service' },
-      transports: [
-        new LokiTransport({
-          label: {
-            appName: 'user-service',
-          },
-          host: lokiHostUrl,
-        }),
-      ],
-    });
+    try {
+      console.log('Logger init...');
+      const lokiTrans = new LokiTransport({
+        label: {
+          appName: 'user-service',
+        },
+        host: 'http://172.18.105.191:3100',
+      });
+      console.log(lokiTrans);
+
+      this.logger = winston.createLogger({
+        level: 'info',
+        format: winston.format.json(),
+        defaultMeta: { service: 'user-service' },
+        transports: [lokiTrans],
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   log(message: string) {

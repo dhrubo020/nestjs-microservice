@@ -1,9 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { randomInt, randomUUID } from 'crypto';
+import { Injectable } from '@nestjs/common';
+import { Span, trace } from '@opentelemetry/api';
+import { randomInt } from 'crypto';
 import { MicroServiceClient } from 'src/microservice';
 import { newTracer } from 'src/tracer/tracer.utils';
 import { WinstonLogger } from 'src/utils/logger';
-import { trace, Span } from '@opentelemetry/api';
 
 @Injectable()
 export class AppService {
@@ -12,27 +12,43 @@ export class AppService {
     private winstonLogger: WinstonLogger,
   ) {}
 
-  async getPosts(id: string) {
-    const traceData = newTracer(this.getPosts.name);
-    const tracer = trace.getTracer(this.getSlow.name);
-    const userId = id || randomInt(5);
+  async getHello() {
+    const traceData = newTracer('user-service');
+    const payload = {
+      data: 'message from user service',
+      spanContext: traceData.spanContext,
+    };
+    const doc = await this.clientProxy.send('error_message', payload);
+    // console.log({ doc });
+    // this.winstonLogger.log('Get Hellow');
+    // this.winstonLogger.error('Get Error', 'pppppp');
+
+    traceData.span.end();
+    if (!doc) {
+      return 'Error';
+    }
+
+    return 'Hello World!';
+  }
+
+  async taskService() {
+    const traceData = newTracer(this.getHello.name);
     const payload = {
       data: {
-        userId,
+        userId: '',
       },
       spanContext: traceData.spanContext,
     };
-    //
-    console.log({ payload });
+    const doc = await this.clientProxy.send('test_message', payload);
+    console.log({ doc });
+    this.winstonLogger.log('Get Hellow');
+    this.winstonLogger.error('Get Error', 'pppppp');
 
-    // trace + logger
-    const getFeedsSpan = tracer.startSpan('GET_FEEDS');
-    this.winstonLogger.log(JSON.stringify(payload));
-    const doc = await this.clientProxy.send('GET_FEEDS_MESSAGE', payload);
+    traceData.span.end();
     if (!doc) {
-      this.winstonLogger.error('Can not get posts', JSON.stringify(payload));
+      return 'Error';
     }
-    getFeedsSpan.end();
+
     return doc;
   }
 

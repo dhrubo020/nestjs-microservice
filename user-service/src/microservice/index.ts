@@ -1,17 +1,17 @@
 import {
-  Logger,
-  Inject,
-  HttpException,
-  Global,
-  Module,
   DynamicModule,
+  Global,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Logger,
+  Module,
 } from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
-import { amqpUrl } from 'config';
 import { firstValueFrom, timeout } from 'rxjs';
 
 export class MicroServiceClient {
@@ -36,6 +36,28 @@ export class MicroServiceClient {
   }
 }
 
+const fact = () => {
+  try {
+    console.log('connecting to rmq');
+
+    const px = ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [`${'amqp://localhost:5672'}`],
+        queue: 'task_queue',
+        queueOptions: {
+          durable: false,
+        },
+      },
+    });
+    console.log(px);
+    return px;
+  } catch (error) {
+    console.log(error);
+    throw new HttpException('XXX', HttpStatus.CONFLICT);
+  }
+};
+
 @Global()
 @Module({})
 export class MicroServiceClientModule {
@@ -45,17 +67,7 @@ export class MicroServiceClientModule {
       providers: [
         {
           provide: 'MICROSERVICE_CLIENT',
-          useFactory: () =>
-            ClientProxyFactory.create({
-              transport: Transport.RMQ,
-              options: {
-                urls: [amqpUrl],
-                queue: 'task_queue',
-                queueOptions: {
-                  durable: false,
-                },
-              },
-            }),
+          useFactory: fact,
         },
         MicroServiceClient,
       ],
